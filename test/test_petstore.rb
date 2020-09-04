@@ -19,6 +19,10 @@ class PetstoreTest < Minitest::Test
     assert api.respond_to?(:listPets)
     assert api.respond_to?(:createPets)
     assert api.respond_to?(:showPetById)
+    
+    assert api.respond_to?(:list_pets)
+    assert api.respond_to?(:create_pets)
+    assert api.respond_to?(:show_pet_by_id)
   end
 
   def test_methods_are_callable
