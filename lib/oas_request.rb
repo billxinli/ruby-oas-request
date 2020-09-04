@@ -1,4 +1,5 @@
 require "rack"
+require "string"
 
 class OASRequest
   def self.spec(oas)
@@ -44,13 +45,16 @@ class OASRequest
         )
       end
 
+
       oas["paths"].each do |url, methods|
         methods.each do |method, definition|
           # filter to paths that contain an operationId
           next unless definition.is_a?(Hash) && definition["operationId"]
 
-          # process each method
-          define_method definition["operationId"] do |headers: {}, params: {}, query: {}, body: nil|
+          operation_id = definition["operationId"]
+          underscored_operation_id = operation_id.underscore
+
+          request_method = Proc.new do |headers: {}, params: {}, query: {}, body: nil|
             __request(
                 method: method,
                 url: url,
@@ -62,6 +66,12 @@ class OASRequest
                 }
             )
           end
+
+          # process each method
+          define_method(operation_id, &request_method)
+
+          # Rubyify it getFooByBar -> get_foo_by_bar
+          define_method(underscored_operation_id, &request_method) if operation_id != underscored_operation_id
         end
       end
     end
