@@ -19,7 +19,7 @@ class PetstoreTest < Minitest::Test
     assert api.respond_to?(:listPets)
     assert api.respond_to?(:createPets)
     assert api.respond_to?(:showPetById)
-    
+
     assert api.respond_to?(:list_pets)
     assert api.respond_to?(:create_pets)
     assert api.respond_to?(:show_pet_by_id)
@@ -104,4 +104,74 @@ class PetstoreTest < Minitest::Test
                 "X-Pet-Type" => "dog"},
       times: 1
   end
+
+
+  def test_sub_path_in_server
+    stub_request(:get, "https://example.com/api/v1-0-0/pets/1?is_good=yes&name=ruby").with(
+        headers: {
+            "Accept" => "application/json",
+            "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+            "Host" => "example.com",
+            "User-Agent" => "Ruby",
+            "X-Pet-Type" => "dog"
+        }
+    ).to_return(status: 200, body: "", headers: {})
+
+    api = @api.new(server: "https://example.com/api/v1-0-0",
+                   headers: {
+                       'x-pet-type': "dog"
+                   },
+                   params: {
+                       petId: 1
+                   },
+                   query: {
+                       name: "ruby"
+                   })
+
+    api.showPetById({query: {is_good: "yes"}})
+
+    assert_requested :get,
+                     "https://example.com/api/v1-0-0/pets/1?is_good=yes&name=ruby",
+                     headers: {"Accept" => "application/json",
+                               "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+                               "Host" => "example.com",
+                               "User-Agent" => "Ruby",
+                               "X-Pet-Type" => "dog"},
+                     times: 1
+  end
+
+  def test_sub_path_in_server_without_slashes
+    stub_request(:get, "https://example.com/api/v1-0-0/pets/1?is_good=yes&name=ruby").with(
+        headers: {
+            "Accept" => "application/json",
+            "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+            "Host" => "example.com",
+            "User-Agent" => "Ruby",
+            "X-Pet-Type" => "dog"
+        }
+    ).to_return(status: 200, body: "", headers: {})
+
+    api = @api.new(server: "https://example.com/api/v1-0-0/",
+                   headers: {
+                       'x-pet-type': "dog"
+                   },
+                   params: {
+                       petId: 1
+                   },
+                   query: {
+                       name: "ruby"
+                   })
+
+    api.showPetById({query: {is_good: "yes"}})
+
+    assert_requested :get,
+                     "https://example.com/api/v1-0-0/pets/1?is_good=yes&name=ruby",
+                     headers: {"Accept" => "application/json",
+                               "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+                               "Host" => "example.com",
+                               "User-Agent" => "Ruby",
+                               "X-Pet-Type" => "dog"},
+                     times: 1
+  end
+
 end
