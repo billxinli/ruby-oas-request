@@ -1,7 +1,8 @@
 PATH
   remote: .
   specs:
-    oas_request (0.0.2)
+    oas_request (0.0.5)
+      jwt (~> 2.2, >= 2.2.2)
       rack (~> 2.2, >= 2.2.3)
 
 GEM
@@ -13,6 +14,7 @@ GEM
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     hashdiff (1.0.1)
+    jwt (2.2.2)
     parallel (1.19.2)
     parser (2.7.1.4)
       ast (~> 2.4.1)
@@ -49,6 +51,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  jwt (~> 2.2, >= 2.2.2)
   oas_request!
   rack (~> 2.2, >= 2.2.3)
   standard

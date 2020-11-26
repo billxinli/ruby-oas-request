@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.license = "MIT"
 
   s.required_ruby_version = ">= 2.5.0"
+  s.add_runtime_dependency "jwt", "~> 2.2", ">= 2.2.2"
   s.add_runtime_dependency "rack", "~> 2.2", ">= 2.2.3"
   s.add_development_dependency "webmock", "~> 3.8", ">= 3.8.3"
 end
