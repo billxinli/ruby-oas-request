@@ -5,7 +5,7 @@ class OASRequest
   def self.spec(oas)
     Class.new do
       def initialize(server:, headers: {}, params: {}, query: {})
-        @server = server
+        @server = server.chomp("/")
 
         @headers = headers
         @params = params
